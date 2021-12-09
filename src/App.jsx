@@ -1,33 +1,75 @@
 import { useState } from "react";
+import { useEffect } from "react";
 
 import Header from "./components/Header";
+import Filter from "./components/Filter";
+import List from "./components/List";
 
 export default function App() {
-  const [breweries, setBreweries] = useState([]);
-  const [selectedState, setSelectedState] = useState("");
+    
+    const defaultTypeFilter = ["Micro", "Regional", "Brewpub"];
 
-  console.log("State: ", { breweries, selectedState });
+    const [stateSearch, setStateSearch] = useState("");
+    const [selectedState, setSelectedState] = useState("");
 
-  const handleSelectStateForm = (event) => {
-    event.preventDefault();
+    const [breweries, setBreweries] = useState([]);
+    //const [filteredBreweries, setFilteredBreweries] = useState([]);
 
-    console.log("Inside handleSelectStateForm: ", event.target);
-  };
+    //const [search, setSearch] = useState("");
+    //const [city, setCity] = useState([]);
+    const [type, setType] = useState(defaultTypeFilter);
 
-  const handleSelectStateInput = (event) => {
-    console.log("Inside handleSelectStateInput: ", event.target.value);
-  };
+    console.log("States: ", { breweries, selectedState, type });
 
-  return (
-    <>
-      <Header
-        handleSubmit={handleSelectStateForm}
-        handleInput={handleSelectStateInput}
-      />
-      <main>
-        {/* Ṛest of components will go here
-         */}
-      </main>
-    </>
-  );
+    useEffect(() => {
+        if (!selectedState) return;
+        const fetchBreweries = async () => {
+            try {
+                const response = await fetch(
+                    `https://api.openbrewerydb.org/breweries?by_state=${selectedState}`
+                );
+                const data = await response.json();
+                setBreweries(data);
+            } catch (error) {
+                console.log(error);
+            }
+        };
+        fetchBreweries();
+    }, [selectedState]);
+
+    const handleStateSearchSubmit = (event) => {
+        event.preventDefault();
+        setSelectedState(stateSearch);
+    };
+
+    const handleStateSearchChange = (event) => {
+        setStateSearch(event.target.value);
+    };
+
+    const handleFilterChange = (event) => {
+        //console.log(event.target.value);
+        if (event.target.name === "filter-by-type") setType([event.target.value])
+        
+        //let newArray = [event.target.value]
+        //setType(newArray)
+    };
+
+    return (
+        <>
+            <Header
+                handleStateSubmit={handleStateSearchSubmit}
+                handleStateChange={handleStateSearchChange}
+            />
+            {selectedState && (
+                <main>
+                    <Filter
+                        breweries={breweries}
+                        defaultTypeFilter={defaultTypeFilter}
+                        handleFilterChange={handleFilterChange}
+                    />
+                    <List />
+                </main>
+            )}
+        </>
+    );
 }
