@@ -6,20 +6,25 @@ import Filter from "./components/Filter";
 import List from "./components/List";
 
 export default function App() {
-    
     const defaultTypeFilter = ["Micro", "Regional", "Brewpub"];
+    let breweryCounter = 0;
 
-    const [stateSearch, setStateSearch] = useState("");
     const [selectedState, setSelectedState] = useState("");
-
     const [breweries, setBreweries] = useState([]);
-    //const [filteredBreweries, setFilteredBreweries] = useState([]);
+    const [filteredBreweries, setFilteredBreweries] = useState([]);
 
-    //const [search, setSearch] = useState("");
-    //const [city, setCity] = useState([]);
-    const [type, setType] = useState(defaultTypeFilter);
+    const [search, setSearch] = useState("");
+    const [city, setCity] = useState([]);
+    const [type, setType] = useState("");
 
-    console.log("States: ", { breweries, selectedState, type });
+    console.log("States: ", {
+        breweries,
+        selectedState,
+        type,
+        filteredBreweries,
+        search,
+        city,
+    });
 
     useEffect(() => {
         if (!selectedState) return;
@@ -37,37 +42,77 @@ export default function App() {
         fetchBreweries();
     }, [selectedState]);
 
-    const handleStateSearchSubmit = (event) => {
+    useEffect(() => {
+        let filteredArray = breweries.filter((brewery) => filterBreweries(brewery));
+        setFilteredBreweries(filteredArray);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [breweries, city, type, search]);
+
+    const filterBreweries = (brewery) => {
+        if (filterByType(brewery) && filterByCity(brewery) && filterBySearch(brewery) && breweryCounter < 10) {
+            breweryCounter++;
+            return brewery;
+        }
+    };
+
+    const filterByType = (brewery) => {
+        if (brewery.brewery_type === type) return true;
+        if ((brewery.brewery_type === "micro" || brewery.brewery_type === "regional" || brewery.brewery_type === "brewpub") && type === "") return true;
+    }
+
+    const filterByCity = (brewery) => {
+        if (city.includes(brewery.city) || city.length < 1) return true;
+    }
+
+    const filterBySearch = (brewery) => {
+        let breweryName = brewery.name.toLowerCase();
+        let breweryCity = brewery.city.toLowerCase();
+        let searchTerm = search.toLowerCase();
+        if (breweryName.includes(searchTerm) || breweryCity.includes(searchTerm) || search === "") return true;
+    }
+
+    const handleStateSearchSubmit = (event, state) => {
         event.preventDefault();
-        setSelectedState(stateSearch);
+        setSelectedState(state);
     };
 
-    const handleStateSearchChange = (event) => {
-        setStateSearch(event.target.value);
+    const handleTypeFilterChange = (event) => {
+        setType(event.target.value.toLowerCase());
     };
 
-    const handleFilterChange = (event) => {
-        //console.log(event.target.value);
-        if (event.target.name === "filter-by-type") setType([event.target.value])
-        
-        //let newArray = [event.target.value]
-        //setType(newArray)
+    const handleCityFilterChange = (event) => {
+        if (event.target.name === "filter-by-city") {
+            if (city.includes(event.target.value)) {
+                let newArray = [...city];
+                setCity(newArray.filter((element) => element !== event.target.value));
+            } else {
+                setCity([...city, event.target.value]);
+            }
+        }
+        if (event.target.name === "clear-all-cities") setCity([]);
     };
+
+    const handleSearchFilterChange = event => setSearch(event.target.value);
 
     return (
         <>
             <Header
-                handleStateSubmit={handleStateSearchSubmit}
-                handleStateChange={handleStateSearchChange}
+                handleStateSearchSubmit={handleStateSearchSubmit}
             />
             {selectedState && (
                 <main>
                     <Filter
-                        breweries={breweries}
+                        filteredBreweries={filteredBreweries}
+                        city={city}
                         defaultTypeFilter={defaultTypeFilter}
-                        handleFilterChange={handleFilterChange}
+                        handleTypeFilterChange={handleTypeFilterChange}
+                        handleCityFilterChange={handleCityFilterChange}
                     />
-                    <List />
+                    <List
+                        selectedState={selectedState}
+                        filteredBreweries={filteredBreweries}
+                        handleSearchFilterChange={handleSearchFilterChange}
+                    />
                 </main>
             )}
         </>

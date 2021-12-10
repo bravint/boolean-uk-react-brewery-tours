@@ -2,53 +2,58 @@ import { useState } from "react";
 import { useEffect } from "react";
 
 const Filter = (props) => {
-    const { defaultTypeFilter, breweries, handleFilterChange } = props;
+    const { defaultTypeFilter, filteredBreweries, handleTypeFilterChange, city , handleCityFilterChange } = props;
 
     const [citiesOptionsList, setCitiesOptionsList] = useState([]);
 
     useEffect(() => {
         const displayCities = () => {
-            let cities = breweries.map((element) => element.city);
+            let cities = filteredBreweries.map((element) => element.city);
             cities = Array.from(new Set(cities));
             setCitiesOptionsList(cities);
         };
         displayCities();
-    }, [breweries]);
+    }, [filteredBreweries]);
+
+    const checkChecked = (element) => {
+        return (city.includes(element) ? true : false)
+    }
 
     return (
         <aside className="filters-section">
             <h2>Filter By:</h2>
-            <form id="filter-by-type-form" autocompete="off">
+            <form id="filter-by-type-form" autoComplete="off">
                 <label htmlFor="filter-by-type">
                     <h3>Type of Brewery</h3>
                 </label>
                 <select
                     name="filter-by-type"
                     id="filter-by-type"
-                    onChange={handleFilterChange}
+                    onChange={handleTypeFilterChange}
                 >
                     <option value="">Select a type...</option>
                     {defaultTypeFilter.map((element) => {
-                        return <option value={element}>{element}</option>;
+                        return <option key={element} value={element}>{element}</option>;
                     })}
                 </select>
             </form>
             <div className="filter-by-city-heading">
                 <h3>Cities</h3>
-                <button className="clear-all-btn">clear all</button>
+                <button className="clear-all-btn" name="clear-all-cities" onClick={handleCityFilterChange}>clear all</button>
             </div>
             <form id="filter-by-city-form">
                 {citiesOptionsList.map((element) => {
                     return (
                         <>
                             <input
-                                key={element.id}
+                                key={element}
                                 type="checkbox"
-                                name={element}
+                                name="filter-by-city"
                                 value={element}
-                                onChange={handleFilterChange}
+                                checked={checkChecked(element)}
+                                onChange={handleCityFilterChange}
                             />
-                            <label key={element.id} htmlFor={element}>
+                            <label htmlFor={element}>
                                 {element}
                             </label>
                         </>

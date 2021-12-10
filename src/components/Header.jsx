@@ -1,5 +1,13 @@
+import { useState } from "react";
+
 const Header = (props) => {
-    const { handleStateSubmit, handleStateChange } = props;
+    const { handleStateSearchSubmit } = props;
+
+    const [stateSearch, setStateSearch] = useState("");
+
+    const handleStateChange = (event) => {
+        setStateSearch(event.target.value);
+    };
 
     return (
         <header className="main-header">
@@ -8,7 +16,9 @@ const Header = (props) => {
                 <form
                     id="select-state-form"
                     autoComplete="off"
-                    onSubmit={handleStateSubmit}
+                    onSubmit={(event) =>
+                        handleStateSearchSubmit(event, stateSearch)
+                    }
                 >
                     <label htmlFor="select-state">
                         Which state are you visiting?
