@@ -32,8 +32,8 @@ const Filter = (props) => {
                     onChange={handleTypeFilterChange}
                 >
                     <option value="">Select a type...</option>
-                    {defaultTypeFilter.map((element) => {
-                        return <option key={element} value={element}>{element}</option>;
+                    {defaultTypeFilter.map((element, index) => {
+                        return <option key={index} value={element}>{element}</option>;
                     })}
                 </select>
             </form>
@@ -42,11 +42,11 @@ const Filter = (props) => {
                 <button className="clear-all-btn" name="clear-all-cities" onClick={handleCityFilterChange}>clear all</button>
             </div>
             <form id="filter-by-city-form">
-                {citiesOptionsList.map((element) => {
+                {citiesOptionsList.map((element, index) => {
                     return (
                         <>
                             <input
-                                key={element}
+                                key={index}
                                 type="checkbox"
                                 name="filter-by-city"
                                 value={element}
