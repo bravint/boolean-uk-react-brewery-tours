@@ -2,18 +2,18 @@ import { useState } from "react";
 import { useEffect } from "react";
 
 const Filter = (props) => {
-    const { defaultTypeFilter, filteredBreweries, handleTypeFilterChange, city , handleCityFilterChange } = props;
+    const { defaultTypeFilter, filteredBreweries, handleTypeFilterChange, city , handleCityFilterChange, breweries } = props;
 
     const [citiesOptionsList, setCitiesOptionsList] = useState([]);
 
     useEffect(() => {
         const displayCities = () => {
-            let cities = filteredBreweries.map((element) => element.city);
+            let cities = breweries.map((element) => element.city);
             cities = Array.from(new Set(cities));
             setCitiesOptionsList(cities);
         };
         displayCities();
-    }, [filteredBreweries]);
+    }, [breweries]);
 
     const checkChecked = (element) => {
         return (city.includes(element) ? true : false)

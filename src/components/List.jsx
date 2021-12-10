@@ -1,9 +1,9 @@
-import { useState } from "react";
+import { useState } from "react"
 import SearchBreweries from "./SearchBreweries";
 import BookingForm from "./BookingForm";
 
 const List = (props) => {
-    const { selectedState, filteredBreweries, handleSearchFilterChange } = props;
+    const { selectedState, filteredBreweries, handleSearchFilterChange, handlePageClick } = props;
 
     const [id, setId] = useState(null);
 
@@ -11,9 +11,11 @@ const List = (props) => {
         setId(event.target.id);
     };
 
+    const capitalisedStateTitle = selectedState.charAt(0).toUpperCase() + selectedState.slice(1);
+
     return (
         <>
-            <h1>List of Breweries from {selectedState}</h1>
+            <h1>List of Breweries from {capitalisedStateTitle}</h1>
             <header className="search-bar">
                 <SearchBreweries
                     handleSearchFilterChange={handleSearchFilterChange}
@@ -65,6 +67,15 @@ const List = (props) => {
                         );
                     })}
                 </ul>
+                <div className="page-select-options">
+                    <button className="page-select-btn" name="previous" onClick={handlePageClick}>
+                    Previous Page
+                    </button>
+                    <div></div>
+                    <button className="page-select-btn" name="next" onClick={handlePageClick}>
+                    Next Page
+                    </button>
+                </div>
             </article>
         </>
     );

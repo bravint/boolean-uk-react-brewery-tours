@@ -18,16 +18,11 @@ const BookingForm = (props) => {
     };
 
     const handleBookingFormChange = (event) => {
-        if (event.target.name === "firstName")
-            setForm({ ...form, firstName: event.target.value });
-        if (event.target.name === "lastName")
-            setForm({ ...form, lastName: event.target.value });
-        if (event.target.name === "date")
-            setForm({ ...form, date: event.target.value });
-        if (event.target.name === "time")
-            setForm({ ...form, time: event.target.value });
-        if (event.target.name === "peopleCount")
-            setForm({ ...form, peopleCount: event.target.value });
+        let name = event.target.name
+        let value = event.target.value
+        let obj = {}
+        obj[name] = value
+        setForm({...form, ...obj});
     };
 
     if (element.id !== id) return null;
@@ -58,7 +53,6 @@ const BookingForm = (props) => {
                     <input
                         type="date"
                         name="date"
-                        value={false}
                         onChange={handleBookingFormChange}
                     />
                 </label>
@@ -70,7 +64,7 @@ const BookingForm = (props) => {
                         min="09:00"
                         max="18:00"
                         step="3600"
-                        value={form.time}
+                        //value={form.time}
                         onChange={handleBookingFormChange}
                     />
                 </label>
