@@ -1,23 +1,39 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useState } from "react";
 import { useEffect } from "react";
 
 const Filter = (props) => {
-    const { defaultTypeFilter, filteredBreweries, handleTypeFilterChange, city , handleCityFilterChange, breweries } = props;
+    const {
+        breweries,
+        filteredBreweries,
+        city,
+        search,
+        type,
+        defaultTypeFilter,
+        handleTypeFilterChange,
+        handleCityFilterChange,
+        handleClearCityFilterClick,
+    } = props;
 
     const [citiesOptionsList, setCitiesOptionsList] = useState([]);
 
     useEffect(() => {
         const displayCities = () => {
-            let cities = breweries.map((element) => element.city);
+            let cities = []
+            if (search==="" && type==="") {
+                cities = breweries.map((element) => element.city)
+            } else {
+                cities = filteredBreweries.map((element) => element.city);
+            }    
             cities = Array.from(new Set(cities));
             setCitiesOptionsList(cities);
         };
         displayCities();
-    }, [breweries]);
+    }, [breweries, filteredBreweries]);
 
     const checkChecked = (element) => {
-        return (city.includes(element) ? true : false)
-    }
+        return city.includes(element) ? true : false;
+    };
 
     return (
         <aside className="filters-section">
@@ -33,13 +49,23 @@ const Filter = (props) => {
                 >
                     <option value="">Select a type...</option>
                     {defaultTypeFilter.map((element, index) => {
-                        return <option key={index} value={element}>{element}</option>;
+                        return (
+                            <option key={index} value={element}>
+                                {element}
+                            </option>
+                        );
                     })}
                 </select>
             </form>
             <div className="filter-by-city-heading">
                 <h3>Cities</h3>
-                <button className="clear-all-btn" name="clear-all-cities" onClick={handleCityFilterChange}>clear all</button>
+                <button
+                    className="clear-all-btn"
+                    name="clear-all-cities"
+                    onClick={handleClearCityFilterClick}
+                >
+                    clear all
+                </button>
             </div>
             <form id="filter-by-city-form">
                 {citiesOptionsList.map((element, index) => {
@@ -47,15 +73,14 @@ const Filter = (props) => {
                         <>
                             <input
                                 key={index}
+                                id={element}
                                 type="checkbox"
                                 name="filter-by-city"
                                 value={element}
                                 checked={checkChecked(element)}
                                 onChange={handleCityFilterChange}
                             />
-                            <label htmlFor={element}>
-                                {element}
-                            </label>
+                            <label htmlFor={element}>{element}</label>
                         </>
                     );
                 })}

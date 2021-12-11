@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useState } from "react";
 import { useEffect } from "react";
 
@@ -14,21 +15,20 @@ export default function App() {
     const [data, setData] = useState([]);
     const [breweries, setBreweries] = useState([]);
     const [filteredBreweries, setFilteredBreweries] = useState([]);
-    const [index, setIndex] = useState(0);
-    //const [page, setPage] = useState("");
+
+    const [page, setPage] = useState(0);
     const [search, setSearch] = useState("");
     const [city, setCity] = useState([]);
     const [type, setType] = useState("");
 
     console.log("States: ", {
-        data,
         breweries,
         selectedState,
         type,
         filteredBreweries,
         search,
         city,
-        index
+        page,
     });
 
     useEffect(() => {
@@ -39,7 +39,10 @@ export default function App() {
                     `https://api.openbrewerydb.org/breweries?by_state=${selectedState}&per_page=50`
                 );
                 const data = await response.json();
-                setData(data);
+                clearFilters();
+                setPage(0);
+                let breweryArray = data.filter((element) => filterBreweries(element, data.length));
+                setData(breweryArray);
             } catch (error) {
                 console.log(error);
             }
@@ -48,78 +51,59 @@ export default function App() {
     }, [selectedState]);
 
     useEffect(() => {
-        nextPage()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [data]);
+        console.log('useEffect, setBreweries')
+        clearFilters();
+        setBreweries(changePage(data, page));
+    }, [data, page]);
 
     useEffect(() => {
-        let filteredArray = breweries.filter((brewery) => filterBreweries(brewery, 0, 10));
-        setFilteredBreweries(filteredArray);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        console.log('useEffect, setFilteredBreweries')
+        setFilteredBreweries(changePage(breweries));
     }, [breweries, city, type, search]);
 
-    const nextPage = () => {
-        let newArray = []
-        if (index >= 49) return
-        for (let i = index; i < data.length; i++) {
-            let brewery = filterBreweries(data[i], i, 10)
-            if(brewery) newArray.push(brewery)
-            if (newArray.length === 10 || (newArray.length > 1 && i === data.length-1)) {
-                if (newArray.length !== 10 && i === data.length-1) setIndex(i)
-                setBreweries(newArray);
-            }
+    const changePage = (array, pageNumber = 0) => {
+        let newArray = [];
+        let startingIndex = pageNumber * 10;
+        for (let i = startingIndex; i < array.length; i++) {
+            let brewery = filterBreweries(array[i], 10);
+            if (brewery) newArray.push(brewery);
         }
-    }
+        return newArray;
+    };
 
-    const previousPage = () => {
-        let newArray = []
-        if (index <= 0) return
-        for (let i = index; i < data.length; i--) {
-            if (i < 0) return
-            let brewery = filterBreweries(data[i], i, 20)
-            if(brewery) newArray.push(brewery)
-            if (newArray.length === 20 || (newArray.length > 10 && i === 0)) {
-                for (let j = 0; j < 10; j++) {
-                    newArray.shift() 
-                } 
-                newArray=sortArray(newArray)
-                setBreweries(newArray);
-            }
-        }
-    }
+    const clearFilters = () => {
+        setSearch("");
+        setCity([]);
+        setType("");
+    };
 
-    //FML LENNI WHAT A PITA
-
-    const sortArray = (array) => {
-        const compare = (a ,b) => {
-            return (a.name < b.name ? -1 : (a.name >  b.name ?  1 : 0))
-        }
-        return array.sort(compare)
-    }
-
-    const filterBreweries = (brewery, index = 0, limit) => {
-        if (filterByType(brewery) && filterByCity(brewery) && filterBySearch(brewery) && breweryCounter < limit) {
+    const filterBreweries = (brewery, limit) => {
+        if (
+            filterByType(brewery) &&
+            filterByCity(brewery) &&
+            filterBySearch(brewery) &&
+            breweryCounter < limit
+        ) {
             breweryCounter++;
-            if (breweryCounter === 10 && index) setIndex(index)
             return brewery;
         }
     };
- 
+
     const filterByType = (brewery) => {
         if (brewery.brewery_type === type) return true;
         if ((brewery.brewery_type === "micro" || brewery.brewery_type === "regional" || brewery.brewery_type === "brewpub") && type === "") return true;
-    }
+    };
 
     const filterByCity = (brewery) => {
         if (city.includes(brewery.city) || city.length < 1) return true;
-    }
+    };
 
     const filterBySearch = (brewery) => {
         let breweryName = brewery.name.toLowerCase();
         let breweryCity = brewery.city.toLowerCase();
         let searchTerm = search.toLowerCase();
         if (breweryName.includes(searchTerm) || breweryCity.includes(searchTerm) || search === "") return true;
-    }
+    };
 
     const handleStateSearchSubmit = (event, state) => {
         event.preventDefault();
@@ -134,42 +118,57 @@ export default function App() {
         if (event.target.name === "filter-by-city") {
             if (city.includes(event.target.value)) {
                 let newArray = [...city];
-                setCity(newArray.filter((element) => element !== event.target.value));
+                setCity(
+                    newArray.filter((element) => element !== event.target.value)
+                );
             } else {
                 setCity([...city, event.target.value]);
             }
         }
-        if (event.target.name === "clear-all-cities") setCity([]);
     };
 
-    const handleSearchFilterChange = event => setSearch(event.target.value);
+    const handleClearCityFilterClick = () => {
+        setCity([]);
+    };
 
-    const handlePageClick = (event) => {
-        //console.log(event)
-        //let newPage = page
-        return ((event.target.name === 'next') ? nextPage() : previousPage())
-    }
+    const handleSearchFilterChange = (event) => setSearch(event.target.value);
+
+    const handleNextPageClick = () => {
+        let newPage = page;
+        newPage++;
+        setPage(newPage);
+    };
+
+    const handlePreviousPageClick = () => {
+        let newPage = page;
+        newPage--;
+        setPage(newPage);
+    };
 
     return (
         <>
-            <Header
-                handleStateSearchSubmit={handleStateSearchSubmit}
-            />
+            <Header handleStateSearchSubmit={handleStateSearchSubmit} />
             {selectedState && (
                 <main>
                     <Filter
+                        breweries={breweries}
                         filteredBreweries={filteredBreweries}
                         city={city}
+                        search={search}
+                        type={type}
                         defaultTypeFilter={defaultTypeFilter}
                         handleTypeFilterChange={handleTypeFilterChange}
                         handleCityFilterChange={handleCityFilterChange}
-                        breweries={breweries}
+                        handleClearCityFilterClick={handleClearCityFilterClick}
                     />
                     <List
                         selectedState={selectedState}
+                        data={data}
                         filteredBreweries={filteredBreweries}
+                        page={page}
                         handleSearchFilterChange={handleSearchFilterChange}
-                        handlePageClick={handlePageClick}
+                        handleNextPageClick={handleNextPageClick}
+                        handlePreviousPageClick={handlePreviousPageClick}
                     />
                 </main>
             )}
