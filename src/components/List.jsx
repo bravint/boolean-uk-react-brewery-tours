@@ -8,9 +8,13 @@ const List = (props) => {
         data,
         filteredBreweries,
         page,
+        city,
+        search,
+        type,
         handleSearchFilterChange,
         handleNextPageClick,
         handlePreviousPageClick,
+        handleReturnPageClick,
     } = props;
 
     const [id, setId] = useState(null);
@@ -20,7 +24,7 @@ const List = (props) => {
     };
 
     const capitalisedStateTitle =
-        selectedState.charAt(0).toUpperCase() + selectedState.slice(1);
+        selectedState.replace(/\b\w/g, l => l.toUpperCase());
 
     const displayPreviousPageButton = () => {
         return page === 0 ? false : true;
@@ -28,6 +32,10 @@ const List = (props) => {
 
     const displayNextPageButton = () => {
         return page * 10 + 10 >= data.length ? false : true;
+    };
+
+    const displayReturnButton = () => {
+        return city.length === 0 && search === "" && type === "" ? false : true;
     };
 
     const replaceNullPhoneNumbers = (element) => {
@@ -43,17 +51,16 @@ const List = (props) => {
     };
 
     const pageMaxCount = () => {
-        return Math.ceil(data.length/10)
-    }
+        return Math.ceil(data.length / 10);
+    };
 
     return (
         <>
             <h1>List of Breweries from {capitalisedStateTitle}</h1>
-            <header className="search-bar">
-                <SearchBreweries
-                    handleSearchFilterChange={handleSearchFilterChange}
-                />
-            </header>
+            <SearchBreweries
+                handleSearchFilterChange={handleSearchFilterChange}
+                search={search}
+            />
             <article>
                 <ul className="breweries-list">
                     {filteredBreweries.map((element) => {
@@ -129,31 +136,46 @@ const List = (props) => {
                         );
                     })}
                 </ul>
-                <div className="page-select-options">
-                    {displayPreviousPageButton() && (
+                {!displayReturnButton() && (
+                    <div className="page-select-options">
+                        {displayPreviousPageButton() && (
+                            <button
+                                className="page-select-btn"
+                                name="previous"
+                                onClick={handlePreviousPageClick}
+                            >
+                                Previous Page
+                            </button>
+                        )}
+                        {!displayPreviousPageButton() && <div>&nbsp;</div>}
+                        <div>
+                            <p className="pageNumber">
+                                Page {page + 1} of {pageMaxCount()}
+                            </p>
+                        </div>
+                        {displayNextPageButton() && (
+                            <button
+                                className="page-select-btn"
+                                name="next"
+                                onClick={handleNextPageClick}
+                            >
+                                Next Page
+                            </button>
+                        )}
+                        {!displayNextPageButton() && <div>&nbsp;</div>}
+                    </div>
+                )}
+                {displayReturnButton() && (
+                    <div className="page-select-options">
                         <button
                             className="page-select-btn"
                             name="previous"
-                            onClick={handlePreviousPageClick}
+                            onClick={handleReturnPageClick}
                         >
-                            Previous Page
+                            Return to Full List
                         </button>
-                    )}
-                    {!displayPreviousPageButton() && <div></div>}
-                    <div>
-                        <p className="pageNumber">Page {page+1} of {pageMaxCount()}</p>
                     </div>
-                    {displayNextPageButton() && (
-                        <button
-                            className="page-select-btn"
-                            name="next"
-                            onClick={handleNextPageClick}
-                        >
-                            Next Page
-                        </button>
-                    )}
-                    {!displayNextPageButton() && <div>&nbsp;</div>}
-                </div>
+                )}
             </article>
         </>
     );

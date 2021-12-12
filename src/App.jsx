@@ -145,6 +145,10 @@ export default function App() {
         setPage(newPage);
     };
 
+    const handleReturnPageClick = () => {
+        clearFilters();
+    }
+
     return (
         <>
             <Header handleStateSearchSubmit={handleStateSearchSubmit} />
@@ -166,9 +170,13 @@ export default function App() {
                         data={data}
                         filteredBreweries={filteredBreweries}
                         page={page}
+                        city={city}
+                        search={search}
+                        type={type}
                         handleSearchFilterChange={handleSearchFilterChange}
                         handleNextPageClick={handleNextPageClick}
                         handlePreviousPageClick={handlePreviousPageClick}
+                        handleReturnPageClick={handleReturnPageClick}
                     />
                 </main>
             )}

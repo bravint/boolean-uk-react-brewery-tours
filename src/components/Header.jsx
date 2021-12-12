@@ -27,6 +27,7 @@ const Header = (props) => {
                         id="select-state"
                         name="select-state"
                         type="text"
+                        value={stateSearch}
                         onChange={handleStateChange}
                     />
                 </form>
