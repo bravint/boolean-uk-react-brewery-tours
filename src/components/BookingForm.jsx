@@ -15,22 +15,20 @@ const BookingForm = (props) => {
 
     const handleBookingFormSubmit = (event) => {
         event.preventDefault();
-        const jsonObject = new Object
-        jsonObject.booking = form
-        jsonObject.brewery = element
-        postForm(jsonObject)
+        const newBooking = Object.assign({}, ...form, element);
+        postForm(newBooking);
         setForm(initialState);
     };
 
-    const postForm = async (jsonObject) => {
+    const postForm = async (bookingObject) => {
         await fetch("http://localhost:4000/bookings", {
             method: "POST",
             headers: {
-                'Content-Type': 'application/json'
+                "Content-Type": "application/json",
             },
-            body: JSON.stringify(jsonObject)
-        })
-    }
+            body: JSON.stringify(bookingObject),
+        });
+    };
 
     const handleBookingFormChange = (event) => {
         let name = event.target.name;

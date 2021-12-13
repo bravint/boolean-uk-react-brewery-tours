@@ -19,12 +19,12 @@ const Filter = (props) => {
 
     useEffect(() => {
         const displayCities = () => {
-            let cities = []
-            if (search==="" && type==="") {
-                cities = breweries.map((element) => element.city)
+            let cities = [];
+            if (search === "" && type === "") {
+                cities = breweries.map((element) => element.city);
             } else {
                 cities = filteredBreweries.map((element) => element.city);
-            }    
+            }
             cities = Array.from(new Set(cities));
             setCitiesOptionsList(cities);
         };

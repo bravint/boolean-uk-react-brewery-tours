@@ -15,7 +15,7 @@ const List = (props) => {
         handleNextPageClick,
         handlePreviousPageClick,
         handleReturnPageClick,
-        handleViewBookingsClick
+        handleViewBookingsClick,
     } = props;
 
     const [id, setId] = useState(null);
@@ -24,8 +24,9 @@ const List = (props) => {
         return id !== event.target.id ? setId(event.target.id) : setId("");
     };
 
-    const capitalisedStateTitle =
-        selectedState.replace(/\b\w/g, l => l.toUpperCase());
+    const capitalisedStateTitle = selectedState.replace(/\b\w/g, (l) =>
+        l.toUpperCase()
+    );
 
     const displayPreviousPageButton = () => {
         return page === 0 ? false : true;

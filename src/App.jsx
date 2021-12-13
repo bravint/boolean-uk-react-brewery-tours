@@ -5,7 +5,7 @@ import { useEffect } from "react";
 import Header from "./components/Header";
 import Filter from "./components/Filter";
 import List from "./components/List";
-import Bookings from "./components/Bookings"
+import Bookings from "./components/Bookings";
 
 export default function App() {
     const defaultTypeFilter = ["Micro", "Brewpub", "Regional"];
@@ -22,8 +22,8 @@ export default function App() {
     const [city, setCity] = useState([]);
     const [type, setType] = useState("");
 
-    const [bookings, setBookings] = useState([])
-    const [trigger, setTrigger] = useState(false)
+    const [bookings, setBookings] = useState([]);
+    const [trigger, setTrigger] = useState(false);
 
     console.log("States: ", {
         breweries,
@@ -45,7 +45,9 @@ export default function App() {
                 const data = await response.json();
                 clearFilters();
                 setPage(0);
-                let breweryArray = data.filter((element) => filterBreweries(element, data.length));
+                let breweryArray = data.filter((element) =>
+                    filterBreweries(element, data.length)
+                );
                 setData(breweryArray);
             } catch (error) {
                 console.log(error);
@@ -55,13 +57,13 @@ export default function App() {
     }, [selectedState]);
 
     useEffect(() => {
-        console.log('useEffect, setBreweries')
+        console.log("useEffect, setBreweries");
         clearFilters();
         setBreweries(changePage(data, page));
     }, [data, page]);
 
     useEffect(() => {
-        console.log('useEffect, setFilteredBreweries')
+        console.log("useEffect, setFilteredBreweries");
         setFilteredBreweries(changePage(breweries));
     }, [breweries, city, type, search]);
 
@@ -95,7 +97,13 @@ export default function App() {
 
     const filterByType = (brewery) => {
         if (brewery.brewery_type === type) return true;
-        if ((brewery.brewery_type === "micro" || brewery.brewery_type === "regional" || brewery.brewery_type === "brewpub") && type === "") return true;
+        if (
+            (brewery.brewery_type === "micro" ||
+                brewery.brewery_type === "regional" ||
+                brewery.brewery_type === "brewpub") &&
+            type === ""
+        )
+            return true;
     };
 
     const filterByCity = (brewery) => {
@@ -106,7 +114,12 @@ export default function App() {
         let breweryName = brewery.name.toLowerCase();
         let breweryCity = brewery.city.toLowerCase();
         let searchTerm = search.toLowerCase();
-        if (breweryName.includes(searchTerm) || breweryCity.includes(searchTerm) || search === "") return true;
+        if (
+            breweryName.includes(searchTerm) ||
+            breweryCity.includes(searchTerm) ||
+            search === ""
+        )
+            return true;
     };
 
     const handleStateSearchSubmit = (event, state) => {
@@ -151,34 +164,32 @@ export default function App() {
 
     const handleReturnPageClick = () => {
         clearFilters();
-    }
+    };
 
     const handleViewBookingsClick = () => {
         const fetchBookings = async () => {
             try {
-                const response = await fetch(
-                    `http://localhost:4000/bookings`
-                );
+                const response = await fetch(`http://localhost:4000/bookings`);
                 const data = await response.json();
-                setTrigger(true)
-                setBookings(data)
+                setTrigger(true);
+                setBookings(data);
             } catch (error) {
-                console.log(error)
+                console.log(error);
             }
-        }
-        fetchBookings()
-    }
+        };
+        fetchBookings();
+    };
     const handleExitBookingsClick = () => {
-        setTrigger(false)
-    }
+        setTrigger(false);
+    };
 
     return (
         <>
             <Header handleStateSearchSubmit={handleStateSearchSubmit} />
-            {(selectedState && trigger === false) && (
+            {selectedState && trigger === false && (
                 <main>
                     <>
-                        < Filter
+                        <Filter
                             breweries={breweries}
                             filteredBreweries={filteredBreweries}
                             city={city}
@@ -187,7 +198,9 @@ export default function App() {
                             defaultTypeFilter={defaultTypeFilter}
                             handleTypeFilterChange={handleTypeFilterChange}
                             handleCityFilterChange={handleCityFilterChange}
-                            handleClearCityFilterClick={handleClearCityFilterClick}
+                            handleClearCityFilterClick={
+                                handleClearCityFilterClick
+                            }
                         />
                         <List
                             selectedState={selectedState}
@@ -204,15 +217,14 @@ export default function App() {
                             handleViewBookingsClick={handleViewBookingsClick}
                         />
                     </>
-
                 </main>
             )}
 
             {trigger === true && (
-                    < Bookings
-                        bookings={bookings}
-                        handleExitBookingsClick={handleExitBookingsClick}
-                    />
+                <Bookings
+                    bookings={bookings}
+                    handleExitBookingsClick={handleExitBookingsClick}
+                />
             )}
         </>
     );
