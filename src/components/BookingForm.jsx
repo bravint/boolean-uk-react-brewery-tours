@@ -15,9 +15,22 @@ const BookingForm = (props) => {
 
     const handleBookingFormSubmit = (event) => {
         event.preventDefault();
-        console.log(form); //function for challenge 2 replaces
+        const jsonObject = new Object
+        jsonObject.booking = form
+        jsonObject.brewery = element
+        postForm(jsonObject)
         setForm(initialState);
     };
+
+    const postForm = async (jsonObject) => {
+        await fetch("http://localhost:4000/bookings", {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(jsonObject)
+        })
+    }
 
     const handleBookingFormChange = (event) => {
         let name = event.target.name;

@@ -7,7 +7,7 @@ import Filter from "./components/Filter";
 import List from "./components/List";
 
 export default function App() {
-    const defaultTypeFilter = ["Micro", "Regional", "Brewpub"];
+    const defaultTypeFilter = ["Mi", "Brcro", "Regionalewpub"];
     let breweryCounter = 0;
 
     const [selectedState, setSelectedState] = useState("");
@@ -20,6 +20,8 @@ export default function App() {
     const [search, setSearch] = useState("");
     const [city, setCity] = useState([]);
     const [type, setType] = useState("");
+
+    const [bookings, setBookings] = useState([])
 
     console.log("States: ", {
         breweries,
@@ -149,6 +151,21 @@ export default function App() {
         clearFilters();
     }
 
+    const handleViewBookingsClick = () => {
+        const fetchBookings = async () => {
+            try {
+                const response = await fetch(
+                    `http://localhost:4000/bookings`
+                );
+                const data = await response.json();
+                console.log(data)
+            } catch (error) {
+                console.log(error)
+            }
+        }
+        fetchBookings()
+    }
+
     return (
         <>
             <Header handleStateSearchSubmit={handleStateSearchSubmit} />
@@ -177,6 +194,7 @@ export default function App() {
                         handleNextPageClick={handleNextPageClick}
                         handlePreviousPageClick={handlePreviousPageClick}
                         handleReturnPageClick={handleReturnPageClick}
+                        handleViewBookingsClick={handleViewBookingsClick}
                     />
                 </main>
             )}

@@ -1,3 +1,33 @@
 {
-  "bookings": []
+  "bookings": [
+    {
+      "booking": {
+        "firstName": "Eleanor",
+        "lastName": "Hart",
+        "tourDate": "2021-12-16",
+        "time": "10:00",
+        "peopleCount": "2"
+      },
+      "brewery": {
+        "id": "13-below-brewery-cincinnati",
+        "name": "13 Below Brewery",
+        "brewery_type": "micro",
+        "street": "7391 Forbes Rd",
+        "address_2": null,
+        "address_3": null,
+        "city": "Cincinnati",
+        "state": "Ohio",
+        "county_province": null,
+        "postal_code": "45233-1013",
+        "country": "United States",
+        "longitude": "-84.70634815",
+        "latitude": "39.12639764",
+        "phone": "5139750613",
+        "website_url": "http://www.13belowbrewery.com",
+        "updated_at": "2021-10-23T02:24:55.243Z",
+        "created_at": "2021-10-23T02:24:55.243Z"
+      },
+      "id": 1
+    }
+  ]
 }

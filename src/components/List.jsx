@@ -15,6 +15,7 @@ const List = (props) => {
         handleNextPageClick,
         handlePreviousPageClick,
         handleReturnPageClick,
+        handleViewBookingsClick
     } = props;
 
     const [id, setId] = useState(null);
@@ -85,6 +86,15 @@ const List = (props) => {
                                     <p>{replaceNullPhoneNumbers(element)}</p>
                                 </section>
                                 <div className="booking button-container">
+                                    <section>
+                                        <button
+                                            id={element.id}
+                                            className="booking-btn"
+                                            onClick={handleViewBookingsClick}
+                                        >
+                                            View Bookings
+                                        </button>
+                                    </section>
                                     <section>
                                         {removeBookingBtn(element) && (
                                             <button
