@@ -7,7 +7,7 @@ import Filter from "./components/Filter";
 import List from "./components/List";
 
 export default function App() {
-    const defaultTypeFilter = ["Mi", "Brcro", "Regionalewpub"];
+    const defaultTypeFilter = ["Micro", "Brewpub", "Regional"];
     let breweryCounter = 0;
 
     const [selectedState, setSelectedState] = useState("");
