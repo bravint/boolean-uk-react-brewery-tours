@@ -28,6 +28,35 @@
         "created_at": "2021-10-23T02:24:55.243Z"
       },
       "id": 1
+    },
+    {
+      "booking": {
+        "firstName": "Jeff",
+        "lastName": "Bezos",
+        "tourDate": "2021-12-30",
+        "time": "17:00",
+        "peopleCount": "2"
+      },
+      "brewery": {
+        "id": "akronym-brewing-llc-akron",
+        "name": "Akronym Brewing LLC",
+        "brewery_type": "micro",
+        "street": "58 E Market St",
+        "address_2": null,
+        "address_3": null,
+        "city": "Akron",
+        "state": "Ohio",
+        "county_province": null,
+        "postal_code": "4430",
+        "country": "United States",
+        "longitude": "-81.51645882",
+        "latitude": "41.08512193",
+        "phone": "3306208274",
+        "website_url": "http://www.akronymbrewing.com",
+        "updated_at": "2021-10-23T02:24:55.243Z",
+        "created_at": "2021-10-23T02:24:55.243Z"
+      },
+      "id": 2
     }
   ]
 }

@@ -303,3 +303,13 @@ article {
     font-weight: 700;
     text-align: center;
 }
+
+.bookingsHeading {
+    display: flex;
+    justify-content: center;
+}
+
+.bookingsListSection {
+    margin: auto;
+    width: 70vw;
+}

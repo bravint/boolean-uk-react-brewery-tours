@@ -5,6 +5,7 @@ import { useEffect } from "react";
 import Header from "./components/Header";
 import Filter from "./components/Filter";
 import List from "./components/List";
+import Bookings from "./components/Bookings"
 
 export default function App() {
     const defaultTypeFilter = ["Micro", "Brewpub", "Regional"];
@@ -22,6 +23,7 @@ export default function App() {
     const [type, setType] = useState("");
 
     const [bookings, setBookings] = useState([])
+    const [trigger, setTrigger] = useState(false)
 
     console.log("States: ", {
         breweries,
@@ -158,45 +160,59 @@ export default function App() {
                     `http://localhost:4000/bookings`
                 );
                 const data = await response.json();
-                console.log(data)
+                setTrigger(true)
+                setBookings(data)
             } catch (error) {
                 console.log(error)
             }
         }
         fetchBookings()
     }
+    const handleExitBookingsClick = () => {
+        setTrigger(false)
+    }
 
     return (
         <>
             <Header handleStateSearchSubmit={handleStateSearchSubmit} />
-            {selectedState && (
+            {(selectedState && trigger === false) && (
                 <main>
-                    <Filter
-                        breweries={breweries}
-                        filteredBreweries={filteredBreweries}
-                        city={city}
-                        search={search}
-                        type={type}
-                        defaultTypeFilter={defaultTypeFilter}
-                        handleTypeFilterChange={handleTypeFilterChange}
-                        handleCityFilterChange={handleCityFilterChange}
-                        handleClearCityFilterClick={handleClearCityFilterClick}
-                    />
-                    <List
-                        selectedState={selectedState}
-                        data={data}
-                        filteredBreweries={filteredBreweries}
-                        page={page}
-                        city={city}
-                        search={search}
-                        type={type}
-                        handleSearchFilterChange={handleSearchFilterChange}
-                        handleNextPageClick={handleNextPageClick}
-                        handlePreviousPageClick={handlePreviousPageClick}
-                        handleReturnPageClick={handleReturnPageClick}
-                        handleViewBookingsClick={handleViewBookingsClick}
-                    />
+                    <>
+                        < Filter
+                            breweries={breweries}
+                            filteredBreweries={filteredBreweries}
+                            city={city}
+                            search={search}
+                            type={type}
+                            defaultTypeFilter={defaultTypeFilter}
+                            handleTypeFilterChange={handleTypeFilterChange}
+                            handleCityFilterChange={handleCityFilterChange}
+                            handleClearCityFilterClick={handleClearCityFilterClick}
+                        />
+                        <List
+                            selectedState={selectedState}
+                            data={data}
+                            filteredBreweries={filteredBreweries}
+                            page={page}
+                            city={city}
+                            search={search}
+                            type={type}
+                            handleSearchFilterChange={handleSearchFilterChange}
+                            handleNextPageClick={handleNextPageClick}
+                            handlePreviousPageClick={handlePreviousPageClick}
+                            handleReturnPageClick={handleReturnPageClick}
+                            handleViewBookingsClick={handleViewBookingsClick}
+                        />
+                    </>
+
                 </main>
+            )}
+
+            {trigger === true && (
+                    < Bookings
+                        bookings={bookings}
+                        handleExitBookingsClick={handleExitBookingsClick}
+                    />
             )}
         </>
     );
