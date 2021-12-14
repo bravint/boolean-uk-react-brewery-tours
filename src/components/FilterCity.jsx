@@ -2,17 +2,15 @@
 import { useState } from "react";
 import { useEffect } from "react";
 
-const Filter = (props) => {
+const FilterCity = (props) => {
     const {
         breweries,
         filteredBreweries,
-        city,
         search,
+        city,
         type,
-        defaultTypeFilter,
-        handleTypeFilterChange,
-        handleCityFilterChange,
         handleClearCityFilterClick,
+        handleCityFilterChange,
     } = props;
 
     const [citiesOptionsList, setCitiesOptionsList] = useState([]);
@@ -36,27 +34,7 @@ const Filter = (props) => {
     };
 
     return (
-        <aside className="filters-section">
-            <h2>Filter By:</h2>
-            <form id="filter-by-type-form" autoComplete="off">
-                <label htmlFor="filter-by-type">
-                    <h3>Type of Brewery</h3>
-                </label>
-                <select
-                    name="filter-by-type"
-                    id="filter-by-type"
-                    onChange={handleTypeFilterChange}
-                >
-                    <option value="">Select a type...</option>
-                    {defaultTypeFilter.map((element, index) => {
-                        return (
-                            <option key={index} value={element}>
-                                {element}
-                            </option>
-                        );
-                    })}
-                </select>
-            </form>
+        <>
             <div className="filter-by-city-heading">
                 <h3>Cities</h3>
                 <button
@@ -85,8 +63,8 @@ const Filter = (props) => {
                     );
                 })}
             </form>
-        </aside>
+        </>
     );
 };
 
-export default Filter;
+export default FilterCity;

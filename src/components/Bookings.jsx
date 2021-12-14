@@ -1,6 +1,5 @@
 const Bookings = (props) => {
     const { bookings, handleExitBookingsClick } = props;
-    console.log(bookings);
 
     const replaceNullPhoneNumbers = (element) => {
         return !element.brewery.phone ? "N/A" : element.brewery.phone;

@@ -16,9 +16,7 @@ const Header = (props) => {
                 <form
                     id="select-state-form"
                     autoComplete="off"
-                    onSubmit={(event) =>
-                        handleStateSearchSubmit(event, stateSearch)
-                    }
+                    onSubmit={(event) => handleStateSearchSubmit(event, stateSearch)}
                 >
                     <label htmlFor="select-state">
                         Which state are you visiting?
