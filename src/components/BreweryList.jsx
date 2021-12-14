@@ -11,6 +11,7 @@ const List = (props) => {
         city,
         search,
         type,
+        capitalisedTitle,
         handleSearchFilterChange,
         handleNextPageClick,
         handlePreviousPageClick,
@@ -18,11 +19,9 @@ const List = (props) => {
         handleViewBookingsClick,
     } = props;
 
-    const capitalisedStateTitle = selectedState.replace(/\b\w/g, (l) => l.toUpperCase());
-
     return (
         <>
-            <h1>List of Breweries from {capitalisedStateTitle}</h1>
+            <h1>List of Breweries from {capitalisedTitle(selectedState)}</h1>
             <BreweryListSearch
                 handleSearchFilterChange={handleSearchFilterChange}
                 search={search}

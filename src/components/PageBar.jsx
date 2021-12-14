@@ -19,7 +19,7 @@ const PageBar = (props) => {
     };
 
     const displayReturnButton = () => {
-        return city.length === 0 && search === "" && type === "" ? false : true;
+        return city.length === 0 && search === "" && type.length === 3? false : true;
     };
 
     return (

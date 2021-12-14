@@ -18,7 +18,7 @@ const FilterCity = (props) => {
     useEffect(() => {
         const displayCities = () => {
             let cities = [];
-            if (search === "" && type === "") {
+            if (search === "" && type.length === 3) {
                 cities = breweries.map((element) => element.city);
             } else {
                 cities = filteredBreweries.map((element) => element.city);

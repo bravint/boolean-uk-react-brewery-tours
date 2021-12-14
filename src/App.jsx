@@ -8,7 +8,7 @@ import BreweryList from "./components/BreweryList";
 import Bookings from "./components/Bookings";
 
 export default function App() {
-    const defaultTypeFilter = ["Micro", "Brewpub", "Regional"];
+    const initialTypeFilter = ["micro", "brewpub", "regional"];
 
     const [selectedState, setSelectedState] = useState("");
     const [data, setData] = useState([]);
@@ -18,7 +18,7 @@ export default function App() {
     const [page, setPage] = useState(1);
     const [search, setSearch] = useState("");
     const [city, setCity] = useState([]);
-    const [type, setType] = useState("");
+    const [type, setType] = useState(initialTypeFilter);
 
     const [bookings, setBookings] = useState([]);
     const [showBookings, setShowBookings] = useState(false);
@@ -50,7 +50,7 @@ export default function App() {
                 const data = await response.json();
                 setData(data);
                 clearFilters();
-                let filteredArray = data.filter((element) => filterBreweries(element));
+                const filteredArray = data.filter((element) => filterBreweries(element));
                 setBreweries(filteredArray);
             } catch (error) {
                 console.log(error);
@@ -60,14 +60,14 @@ export default function App() {
     }, [selectedState, page]);
 
     useEffect(() => {
-        let filteredArray = breweries.filter((element) => filterBreweries(element));
+        const filteredArray = breweries.filter((element) => filterBreweries(element));
         setFilteredBreweries(filteredArray);
     }, [breweries, city, type, search]);
 
     const clearFilters = () => {
         setSearch("");
         setCity([]);
-        setType("");
+        setType(initialTypeFilter);
     };
 
     const filterBreweries = (brewery) => {
@@ -75,8 +75,7 @@ export default function App() {
     };
 
     const filterByType = (brewery) => {
-        if (brewery.brewery_type === type) return true;
-        if ((brewery.brewery_type === "micro" || brewery.brewery_type === "regional" || brewery.brewery_type === "brewpub") && type === "") return true;
+        if (type.includes(brewery.brewery_type)) return true;
     };
 
     const filterByCity = (brewery) => {
@@ -84,18 +83,22 @@ export default function App() {
     };
 
     const filterBySearch = (brewery) => {
-        let breweryName = brewery.name.toLowerCase();
-        let breweryCity = brewery.city.toLowerCase();
-        let searchTerm = search.toLowerCase();
+        const breweryName = brewery.name.toLowerCase();
+        const breweryCity = brewery.city.toLowerCase();
+        const searchTerm = search.toLowerCase();
         if (breweryName.includes(searchTerm) || breweryCity.includes(searchTerm) || search === "") return true;
     };
+
+    const capitalisedTitle = (element) => element.replace(/\b\w/g, (l) => l.toUpperCase());
 
     const handleStateSearchSubmit = (event, state) => {
         event.preventDefault();
         setSelectedState(state);
     };
 
-    const handleTypeFilterChange = (event) => setType(event.target.value.toLowerCase());
+    const handleTypeFilterChange = (event) => {
+        return event.target.value === "" ? setType(initialTypeFilter) : setType([event.target.value.toLowerCase()]);
+    }
 
     const handleCityFilterChange = (event) => {
         if (event.target.name === "filter-by-city") {
@@ -154,7 +157,8 @@ export default function App() {
                             city={city}
                             search={search}
                             type={type}
-                            defaultTypeFilter={defaultTypeFilter}
+                            initialTypeFilter={initialTypeFilter}
+                            capitalisedTitle={capitalisedTitle}
                             handleTypeFilterChange={handleTypeFilterChange}
                             handleCityFilterChange={handleCityFilterChange}
                             handleClearCityFilterClick={handleClearCityFilterClick}
@@ -168,6 +172,7 @@ export default function App() {
                             city={city}
                             search={search}
                             type={type}
+                            capitalisedTitle={capitalisedTitle}
                             handleSearchFilterChange={handleSearchFilterChange}
                             handleNextPageClick={handleNextPageClick}
                             handlePreviousPageClick={handlePreviousPageClick}

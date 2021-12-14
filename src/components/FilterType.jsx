@@ -1,5 +1,5 @@
 function FilterType(props) {
-    const { handleTypeFilterChange, defaultTypeFilter } = props;
+    const { handleTypeFilterChange, initialTypeFilter, capitalisedTitle } = props;
 
     return (
         <form id="filter-by-type-form" autoComplete="off">
@@ -12,10 +12,10 @@ function FilterType(props) {
                 onChange={handleTypeFilterChange}
             >
                 <option value="">Select a type...</option>
-                {defaultTypeFilter.map((element, index) => {
+                {initialTypeFilter.map((element, index) => {
                     return (
                         <option key={index} value={element}>
-                            {element}
+                            {capitalisedTitle(element)}
                         </option>
                     );
                 })}

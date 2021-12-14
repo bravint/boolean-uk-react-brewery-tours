@@ -8,7 +8,8 @@ const Filter = (props) => {
         city,
         search,
         type,
-        defaultTypeFilter,
+        initialTypeFilter,
+        capitalisedTitle,
         handleTypeFilterChange,
         handleCityFilterChange,
         handleClearCityFilterClick,
@@ -18,8 +19,9 @@ const Filter = (props) => {
         <aside className="filters-section">
             <h2>Filter By:</h2>
             <FilterType
-                defaultTypeFilter={defaultTypeFilter}
+                initialTypeFilter={initialTypeFilter}
                 handleTypeFilterChange={handleTypeFilterChange}
+                capitalisedTitle={capitalisedTitle}
             />
             <FilterCity
                 breweries={breweries}
@@ -27,6 +29,7 @@ const Filter = (props) => {
                 city={city}
                 search={search}
                 type={type}
+                initialTypeFilter={initialTypeFilter}
                 handleCityFilterChange={handleCityFilterChange}
                 handleClearCityFilterClick={handleClearCityFilterClick}
             />
