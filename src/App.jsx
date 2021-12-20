@@ -1,6 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { useState } from "react";
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 
 import Header from "./components/Header";
 import Filters from "./components/Filters";
@@ -22,19 +21,6 @@ export default function App() {
 
     const [bookings, setBookings] = useState([]);
     const [showBookings, setShowBookings] = useState(false);
-
-    console.log("States: ", {
-        selectedState,
-        data,
-        breweries,
-        filteredBreweries,
-        page,
-        search,
-        city,
-        type,
-        bookings,
-        showBookings
-    });
 
     useEffect(() => {
         setPage(1);
